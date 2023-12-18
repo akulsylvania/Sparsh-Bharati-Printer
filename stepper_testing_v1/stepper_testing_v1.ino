@@ -1,3 +1,18 @@
+************************************************
+NAME: SPARSH BHARATI PRINTER
+AUTHOR: DIVYARATNA JOSHI
+EMAIL: 1724akul@gmail.com
+************************************************
+
+
+!!!IMPORTANT NOTE!!!
+FOR EVERY X MOVEMENT OF MOTX THERE MUST BE -X/2 MOVEMENT OF MOTY TO ACCOUNT
+FOR TIMING BELT DRIFT
+
+************************************************
+
+
+
 #include <AccelStepper.h>
 
 //DEFINITIONS FOR MOTX
@@ -46,17 +61,11 @@ if(Serial.available()>0){
  
 }
 */
-MOTY.moveTo(500);
-MOTY.runToPosition();
-MOTX.moveTo(500);
-MOTX.runToPosition();
+MOTX.move(1500);
 
+MOTY.move(750);
+MOTX.run();
+MOTY.run();
 
-delay(1000);
-MOTY.moveTo(-500);
-MOTY.runToPosition();
-MOTX.moveTo(-500);
-MOTX.runToPosition();
-delay(1000);
 
 }
