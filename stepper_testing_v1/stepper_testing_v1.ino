@@ -5,7 +5,7 @@ EMAIL: 1724akul@gmail.com
 ************************************************
 
 !!!IMPORTANT NOTE!!!
-FOR EVERY X MOVEMENT OF MOTX THERE MUST BE X/1.5 MOVEMENT OF MOTY TO ACCOUNT
+FOR EVERY X MOVEMENT OF MOTX THERE MUST BE -X MOVEMENT OF MOTY TO ACCOUNT
 FOR TIMING BELT DRIFT
 
 ************************************************/
@@ -21,7 +21,11 @@ FOR TIMING BELT DRIFT
 #define STEPX 3
 #define DIRX 6
 #define EN 8
-#define servo 11
+
+//DEFINITIONS FOR SERVO ACTUATION
+#define servA 11
+#define servB 12
+#define servC 13
 
 //DEFINITIONS FOR MOTY
 #define STEPY 2
@@ -34,14 +38,18 @@ FOR TIMING BELT DRIFT
 //Create AccelStepper and servo objects
 AccelStepper MOTX(AccelStepper::DRIVER ,STEPX, DIRX);
 AccelStepper MOTY(AccelStepper:: DRIVER ,STEPY,DIRY);
-Servo MOTZ;
+Servo MOTA;
+Servo MOTB;
+Servo MOTC;
 
 
 void setup() {
 
 
 // Attatch Servo
-  MOTZ.attach(servo);
+  MOTA.attach(servA);
+  MOTB.attach(servB);
+  MOTC.attach(servC);
 
 //Define pinout for enable
   pinMode(EN, OUTPUT);
@@ -62,34 +70,71 @@ void setup() {
 
 void loop() {
 
-/*
-if(Serial.available()>0){
-  int x=Serial.parseInt();
 
-  xMove(x);
- Serial.println("Completed");
- 
+serialInput();
+
 }
-*/
-
-yMove(100);
 
 
 
 
+//TAKE SERIAL INPUT AND DO MOTION
+void serialInput()
+{
+  if(Serial.available()>0)
+  {
+    String inputString = Serial.readStringUntil('\n'); 
 
+    // Extract x, y, and motor motion values from the string
+    int xMotion = inputString.substring(0, 3).toInt();
+    int yMotion = inputString.substring(3, 6).toInt();
+    int aMotion = inputString.charAt(6) - '0';
+    int bMotion = inputString.charAt(7) - '0';
+    int cMotion = inputString.charAt(8) - '0';
 
+    aMove(aMotion);
+    bMove(bMotion);
+    cMove(cMotion);
+    xMove(xMotion);
+    yMove(yMotion);
+  
+  } 
 }
 
 
 //SERVO ACTUATION
-void servAct()
+void aMove(int a)
 {
-  MOTZ.write(30);
-  MOTZ.write(0);
+  if(a==1){
+  MOTA.write(30);
+  MOTA.write(0);
   delay(200);
-  MOTZ.write(30);
+  MOTA.write(30);
+  }
 }
+
+
+void bMove(int b)
+{
+  if(b==1){
+  MOTB.write(30);
+  MOTB.write(0);
+  delay(200);
+  MOTB.write(30);
+  }
+}
+
+void cMove(int c)
+{
+  if(c==1){
+  MOTC.write(30);
+  MOTC.write(0);
+  delay(200);
+  MOTC.write(30);
+  }
+}
+
+
 
 
 //MOVEMENT IN X
