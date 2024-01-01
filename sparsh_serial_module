@@ -8,7 +8,7 @@ def find_arduino():
 
     for port in available_ports:
         # Check if the description contains the keyword "Arduino"
-        if "Arduino" in port.description:
+        if "USB-SERIAL CH340" in port.description:
             return port.device
 
     return None
@@ -34,11 +34,18 @@ def instruction_send(instructions):
     if ser:
         try:
             while True:
-                ser.write(instructions)
-
+                ser.write(instructions.encode())
                 time.sleep(1)
+                print(ser.readline().decode().strip())
+
 
         except KeyboardInterrupt:
             ser.close()
             print("Connection closed.")
 
+
+str=""
+for i in range(20):
+    str=str+'1'
+
+instruction_send(str)
