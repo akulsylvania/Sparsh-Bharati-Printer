@@ -32,7 +32,7 @@ FOR TIMING BELT DRIFT
 #define DIRY 5
 
 //GLOBAL VARIABLES FOR X AND Y MOVEMENT
-//int x,y;
+int mmToSteps=10;
 
 
 //Create AccelStepper and servo objects
@@ -83,15 +83,18 @@ void serialInput()
 {
   if(Serial.available()>0)
   {
-    String inputString = Serial.readStringUntil('\n'); 
+    String inputString = Serial.readString(); 
+    Serial.println(inputString);
 
     // Extract x, y, and motor motion values from the string
-    int xMotion = inputString.substring(0, 3).toInt();
-    int yMotion = inputString.substring(3, 6).toInt();
-    int aMotion = inputString.charAt(6) - '0';
-    int bMotion = inputString.charAt(7) - '0';
-    int cMotion = inputString.charAt(8) - '0';
+    int xMotion =  mmToStep*inputString.substring(0, 3).toInt();
+    int yMotion =  mmToStep*inputString.substring(3, 6).toInt();
+    int aMotion =  inputString.charAt(6) - '0';
+    int bMotion =  inputString.charAt(7) - '0';
+    int cMotion =  inputString.charAt(8) - '0';
 
+    Serial.println(xMotion);
+    Serial.println(yMotion);
     aMove(aMotion);
     bMove(bMotion);
     cMove(cMotion);
