@@ -2,6 +2,9 @@ import serial.tools.list_ports
 import serial
 import time
 
+chk = 0
+
+
 def find_arduino():
     # Get a list of all available serial ports
     available_ports = list(serial.tools.list_ports.comports())
@@ -12,6 +15,7 @@ def find_arduino():
             return port.device
 
     return None
+
 
 def connect_serial():
     arduino_port = find_arduino()
@@ -28,24 +32,22 @@ def connect_serial():
         print("Arduino not found.")
         return None
 
+
 def instruction_send(instructions):
     ser = connect_serial()
-
+    global chk
     if ser:
         try:
             while True:
+
                 ser.write(instructions.encode())
-                time.sleep(1)
-                print(ser.readline().decode().strip())
+
+                chk = ser.readline().decode().strip()
+                if chk=="1":
+                    break
 
 
         except KeyboardInterrupt:
             ser.close()
             print("Connection closed.")
-
-
-str=""
-for i in range(20):
-    str=str+'1'
-
-instruction_send(str)
+    return chk
